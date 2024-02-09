@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.steven.constant.ProductCategory;
+import com.steven.dto.ProductQueryParams;
 import com.steven.dto.ProductRequest;
 import com.steven.model.Product;
 import com.steven.service.productService;
@@ -26,12 +27,24 @@ public class ProductController {
 
 	@Autowired
 	private productService productService;
-	
+
 	@GetMapping("/products")
 	public ResponseEntity<List<Product>> getProducts(
+			//查詢條件
 			@RequestParam(required = false) ProductCategory category,
-			@RequestParam(required = false) String search) {
-		List<Product> listProduct = productService.getProducts(category,search);
+			@RequestParam(required = false) String search,
+			//排序
+			@RequestParam(defaultValue = "create_date") String orderBy,
+			@RequestParam(defaultValue = "desc") String sort) {
+		
+		ProductQueryParams params=new ProductQueryParams();
+		params.setCategory(category);
+		params.setSearch(search);
+		params.setOrderBy(orderBy);
+		params.setSort(sort);
+		
+		
+		List<Product> listProduct = productService.getProducts(params);
 
 		if (listProduct != null) {
 			return ResponseEntity.status(HttpStatus.OK).body(listProduct);

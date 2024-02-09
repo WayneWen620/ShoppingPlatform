@@ -1,7 +1,7 @@
 package com.steven.service;
 import java.util.List;
 
-import com.steven.constant.ProductCategory;
+import com.steven.dto.ProductQueryParams;
 import com.steven.dto.ProductRequest;
 import com.steven.model.Product;
 
@@ -15,5 +15,5 @@ public interface productService {
 
 	void deleteProduct(Integer productId);
 
-	List<Product> getProducts(ProductCategory category, String search);
+	List<Product> getProducts(ProductQueryParams params);
 }

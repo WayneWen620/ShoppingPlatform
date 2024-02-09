@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.steven.constant.ProductCategory;
 import com.steven.dao.ProductDao;
+import com.steven.dto.ProductQueryParams;
 import com.steven.dto.ProductRequest;
 import com.steven.model.Product;
 import com.steven.rowmapper.ProductRowMapper;
@@ -94,11 +95,16 @@ public class ProductDaoImpl implements ProductDao{
 	}
 
 	@Override
-	public List<Product> getProducts(ProductCategory category,String search) {
+	public List<Product> getProducts(ProductQueryParams params){
 		String sql="select product_id,product_name,category,image_url,price,stock,description,"
 				+ "create_date,last_modified_date "
 				+ "from product where 1=1";
 		Map<String, Object>map=new HashMap<String, Object>();
+		
+		ProductCategory category =params.getCategory();
+		String search =params.getSearch();
+		String sort=params.getSort();
+		String orderBy=params.getOrderBy();
 		
 		if(category!=null) {
 			sql= sql+" and category=:category";
@@ -108,6 +114,8 @@ public class ProductDaoImpl implements ProductDao{
 			sql= sql+" and product_name like :search";
 			map.put("search", "%"+search+"%");
 		}
+		sql= sql+" ORDER BY "+orderBy+" "+sort;
+		
 		List<Product> productList= template.query(sql, map,new ProductRowMapper());
 		if(productList.size()>0) {
 			return productList;
