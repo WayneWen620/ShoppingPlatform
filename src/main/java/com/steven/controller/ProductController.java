@@ -20,6 +20,7 @@ import com.steven.dto.ProductQueryParams;
 import com.steven.dto.ProductRequest;
 import com.steven.model.Product;
 import com.steven.service.productService;
+import com.steven.util.Page;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -32,7 +33,7 @@ public class ProductController {
 	private productService productService;
 
 	@GetMapping("/products")
-	public ResponseEntity<List<Product>> getProducts(
+	public ResponseEntity<Page<Product>> getProducts(
 			//查詢條件
 			@RequestParam(required = false) ProductCategory category,
 			@RequestParam(required = false) String search,
@@ -53,12 +54,16 @@ public class ProductController {
 		params.setOffset(offset);
 		
 		List<Product> listProduct = productService.getProducts(params);
-
-		if (listProduct != null) {
-			return ResponseEntity.status(HttpStatus.OK).body(listProduct);
-		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		}
+		Integer total=productService.countProduct(params);
+		
+		Page<Product>page=new Page<>();
+		page.setLimit(limit);
+		page.setOffset(offset);
+		page.setTotal(total);
+		page.setResults(listProduct);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(page);
+		
 	}
 
 	

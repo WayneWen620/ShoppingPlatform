@@ -1,9 +1,7 @@
 package com.steven.dto;
 
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.steven.constant.ProductCategory;
-import com.steven.controller.offset;
+
 
 public class ProductQueryParams {
 	private ProductCategory category;
