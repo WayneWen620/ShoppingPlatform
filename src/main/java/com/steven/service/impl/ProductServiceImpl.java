@@ -1,8 +1,11 @@
 package com.steven.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.steven.constant.ProductCategory;
 import com.steven.dao.ProductDao;
 import com.steven.dto.ProductRequest;
 import com.steven.model.Product;
@@ -30,6 +33,10 @@ public class ProductServiceImpl implements productService{
 	@Override
 	public void deleteProduct(Integer productId) {
 		productDao.deleteProduct(productId);
+	}
+	@Override
+	public List<Product> getProducts(ProductCategory category,String search) {
+		return productDao.getProducts(category,search);
 	}
 
 }

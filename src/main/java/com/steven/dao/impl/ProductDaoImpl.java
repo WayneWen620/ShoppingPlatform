@@ -12,6 +12,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import com.steven.constant.ProductCategory;
 import com.steven.dao.ProductDao;
 import com.steven.dto.ProductRequest;
 import com.steven.model.Product;
@@ -90,6 +91,29 @@ public class ProductDaoImpl implements ProductDao{
 		map.put("productId", productId);
 		template.update(sql, new MapSqlParameterSource(map));
 		
+	}
+
+	@Override
+	public List<Product> getProducts(ProductCategory category,String search) {
+		String sql="select product_id,product_name,category,image_url,price,stock,description,"
+				+ "create_date,last_modified_date "
+				+ "from product where 1=1";
+		Map<String, Object>map=new HashMap<String, Object>();
+		
+		if(category!=null) {
+			sql= sql+" and category=:category";
+			map.put("category", category.name());
+		}
+		if(search!=null) {
+			sql= sql+" and product_name like :search";
+			map.put("search", "%"+search+"%");
+		}
+		List<Product> productList= template.query(sql, map,new ProductRowMapper());
+		if(productList.size()>0) {
+			return productList;
+		}else {			
+			return null;
+		}
 	}
 
 }

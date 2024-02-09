@@ -1,5 +1,8 @@
 package com.steven.dao;
 
+import java.util.List;
+
+import com.steven.constant.ProductCategory;
 import com.steven.dto.ProductRequest;
 import com.steven.model.Product;
 
@@ -13,4 +16,6 @@ public interface ProductDao {
 	void updateProduct(Integer productId, @Valid ProductRequest request);
 
 	void deleteProduct(Integer productId);
+
+	List<Product> getProducts(ProductCategory category, String search);
 }
