@@ -100,12 +100,15 @@ public class ProductDaoImpl implements ProductDao{
 				+ "create_date,last_modified_date "
 				+ "from product where 1=1";
 		Map<String, Object>map=new HashMap<String, Object>();
-		
+		//查詢條件
 		ProductCategory category =params.getCategory();
 		String search =params.getSearch();
 		String sort=params.getSort();
 		String orderBy=params.getOrderBy();
+		Integer limit=params.getLimit();
+		Integer offset=params.getOffset();
 		
+		//排序
 		if(category!=null) {
 			sql= sql+" and category=:category";
 			map.put("category", category.name());
@@ -116,6 +119,10 @@ public class ProductDaoImpl implements ProductDao{
 		}
 		sql= sql+" ORDER BY "+orderBy+" "+sort;
 		
+		//分頁
+		sql=sql+" limit :limit OFFSET :offset";
+		map.put("limit", limit);
+		map.put("offset", offset);
 		List<Product> productList= template.query(sql, map,new ProductRowMapper());
 		if(productList.size()>0) {
 			return productList;
