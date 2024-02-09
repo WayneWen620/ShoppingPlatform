@@ -1,5 +1,14 @@
 package com.steven.service;
+import com.steven.dto.ProductRequest;
 import com.steven.model.Product;
+
+import jakarta.validation.Valid;
 public interface productService {
 	Product getProductById(Integer productId);
+
+	Integer createProduct(@Valid ProductRequest request);
+
+	void updateProduct(Integer productId, @Valid ProductRequest request);
+
+	void deleteProduct(Integer productId);
 }
