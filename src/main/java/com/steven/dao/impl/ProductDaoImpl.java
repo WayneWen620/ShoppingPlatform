@@ -12,7 +12,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import com.steven.constant.ProductCategory;
 import com.steven.dao.ProductDao;
 import com.steven.dto.ProductQueryParams;
 import com.steven.dto.ProductRequest;
@@ -29,7 +28,7 @@ public class ProductDaoImpl implements ProductDao {
 	@Override
 	public Product getProductById(Integer productId) {
 		String sql = "select product_id,product_name,category,image_url,price,stock,description,"
-				+ "create_date,last_modified_date " + "from shoppingMall.product where product_id=:productId;";
+				+ "create_date,last_modified_date " + "from product where product_id=:productId";
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("productId", productId);
 
@@ -99,22 +98,13 @@ public class ProductDaoImpl implements ProductDao {
 				+ "create_date,last_modified_date " + "from product where 1=1";
 		Map<String, Object> map = new HashMap<String, Object>();
 		// 查詢條件
-		ProductCategory category = params.getCategory();
-		String search = params.getSearch();
+		sql = addFilteringSql(params, sql, map);
+
+		// 排序
 		String sort = params.getSort();
 		String orderBy = params.getOrderBy();
 		Integer limit = params.getLimit();
 		Integer offset = params.getOffset();
-
-		// 排序
-		if (category != null) {
-			sql = sql + " and category=:category";
-			map.put("category", category.name());
-		}
-		if (search != null) {
-			sql = sql + " and product_name like :search";
-			map.put("search", "%" + search + "%");
-		}
 		sql = sql + " ORDER BY " + orderBy + " " + sort;
 
 		// 分頁
@@ -134,24 +124,22 @@ public class ProductDaoImpl implements ProductDao {
 		String sql = "select count(*) from product where 1=1";
 		Map<String, Object> map = new HashMap<String, Object>();
 		// 查詢條件
-		ProductCategory category = params.getCategory();
-		String search = params.getSearch();
-		String sort = params.getSort();
-		String orderBy = params.getOrderBy();
-		Integer limit = params.getLimit();
-		Integer offset = params.getOffset();
-		// 排序
-		if (category != null) {
-			sql = sql + " and category=:category";
-			map.put("category", category.name());
-		}
-		if (search != null) {
-			sql = sql + " and product_name like :search";
-			map.put("search", "%" + search + "%");
-		}
+		sql = addFilteringSql(params, sql, map);
 
 		Integer total = template.queryForObject(sql, map, Integer.class);
 		return total;
+	}
+
+	private String addFilteringSql(ProductQueryParams params, String sql, Map<String, Object> map) {
+		if (params.getCategory() != null) {
+			sql = sql + " and category=:category";
+			map.put("category", params.getCategory().name());
+		}
+		if (params.getSearch() != null) {
+			sql = sql + " and product_name like :search";
+			map.put("search", "%" + params.getSearch() + "%");
+		}
+		return sql;
 	}
 
 }
