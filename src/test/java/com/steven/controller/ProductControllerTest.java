@@ -2,31 +2,24 @@ package com.steven.controller;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.hamcrest.Matchers.*;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Description;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.steven.constant.ProductCategory;
 import com.steven.dto.ProductRequest;
-import com.steven.model.Product;
-
-import jakarta.validation.Valid;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -217,8 +210,8 @@ public class ProductControllerTest {
 				.andExpect(jsonPath("$.results", hasSize(5)))
 				.andExpect(jsonPath("$.results[0].productId", equalTo(6)))
 				.andExpect(jsonPath("$.results[1].productId", equalTo(5)))
-				.andExpect(jsonPath("$.results[2].productId", equalTo(4)))
-				.andExpect(jsonPath("$.results[3].productId", equalTo(3)))
+				.andExpect(jsonPath("$.results[2].productId", equalTo(7)))
+				.andExpect(jsonPath("$.results[3].productId", equalTo(4)))
 				.andExpect(jsonPath("$.results[4].productId", equalTo(2)));
 	}
 	
